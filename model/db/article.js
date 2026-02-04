@@ -3,6 +3,7 @@ import { sqliteConnector } from '../../drizzle.config.js'
 
 export async function newArticle(body) {
   try {
+    console.log(body);
     const { id, title, autor, publishYear, resource, abstract, keyword} = body;
     const newRecord = await sqliteConnector
       .insert(articleTable)

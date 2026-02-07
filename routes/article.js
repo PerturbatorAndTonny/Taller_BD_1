@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { createArticle } from '../controller/article.js';
-import { db } from '../model/db/index.js'; 
-import { articlesTable } from '../model/db/schema.js';
+import { sqliteConnector } from '../drizzle.config.js'; 
+import { articleTable } from '../model/db/schema.js';
 
 const articleRouter = Router();
 
@@ -11,7 +11,7 @@ articleRouter.get('/', async (req, res) => {
     try {
 
         // Consulta todos los artículos guardados
-        const allArticles = await db.select().from(articlesTable);
+        const allArticles = await sqliteConnector.select().from(articleTable);
         res.render('index', { articles: allArticles });
     } catch (error) {
         console.error("Error al obtener artículos:", error);

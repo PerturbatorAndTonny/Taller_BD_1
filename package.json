@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node --env-file=.env --watch app.js"
+    "start": "node --env-file=.env --watch app.js",
+    "load": "node --env-file=.env ./model/load/load.js"
   },
   "keywords": [],
   "author": "",

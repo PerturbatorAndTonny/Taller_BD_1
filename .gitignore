@@ -4,5 +4,6 @@ drizzle/migration/*.sql
 .env
 pnpm-lock.yaml
 pnpm-workspace.yaml
+package-lock.json
 local.db
 file

@@ -11,7 +11,6 @@ app.use(morgan('dev'));
 
 app.set("view engine", "ejs");
 
-app.get('/', (req, res) => res.render('index'));
 app.use('/', articleRoutes);
 
 app.listen(port, () => {

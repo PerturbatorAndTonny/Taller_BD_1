@@ -1,5 +1,5 @@
 {
-  "name": "TrabajoUno",
+  "name": "trabajo-uno",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@libsql/client": "^0.17.0",
+    "dotenv": "^17.2.4",
     "drizzle-orm": "^0.45.1",
     "ejs": "^4.0.1",
     "express": "^5.2.1",

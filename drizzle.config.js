@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import { defineConfig } from 'drizzle-kit';
 import { createClient } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';

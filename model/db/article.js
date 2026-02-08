@@ -21,3 +21,42 @@ export async function newArticle(body) {
     throw new Error(error);
   }
 }
+
+export async function updateArticle(id, body) {
+  try{
+    const { title, autor, publishYear, resource, abstract, keyword} = body;
+    
+    const updated = await sqliteConnector
+    .update(articleTable)
+    .set({
+      title,
+      autor,
+      publishYear,
+      resource,
+      abstract,
+      keyword
+    })
+    
+    .where(articleTable.id.eq(id))
+    .returning({ idArticle: articleTable.id })
+
+    console.log("200", updated);
+  
+  } catch (error){
+    throw new Error(error);
+  }
+}
+
+export async function deleteArticle(id) {
+  try{
+    const deleted = await sqliteConnector
+    .delete(articleTable)
+    .where(articleTable.id.eq(id))
+    .returning({ idArticle: articleTable.id });
+
+    console.log("200", deleted);
+
+  }catch (error) {
+    throw new Error(error);
+  }
+}

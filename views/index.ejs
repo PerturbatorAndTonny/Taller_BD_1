@@ -18,7 +18,7 @@
   }
 
 
-  /*en esta parte se da el inicio al aplicattivo*/
+  /*en esta parte se da el inicio al aplicativo*/
   .her-section {
     height: 100vh;
     display: flex;
@@ -32,7 +32,7 @@
   /*Utilidad para ocultar secciones*/
   .hidden { display: none !important;}
 
-  /*Aqui se le da el estilo a las tarjetas de los articulos*/
+  /*Aquí se le da el estilo a las tarjetas de los artículos*/
   .card-article {
     border: none;
     border-radius: 15px;
@@ -60,7 +60,7 @@
         <div>
           <!--En esta parte se da el titulo al aplicativo-->
           <h1 class="display-2 fw-bold mb-3">Investigación Base de Datos</h1>
-          <p class="lead mb-4">Gestión de articulos cientificos y busqueda</p>
+          <p class="lead mb-4">Gestión de artículos científicos y búsqueda</p>
           <button class="btn btn-light btn-lg px-5 shadow-lg fw-bold" onclick="startApp()"><I>INICIO</I></button>
         </div>
     </div>
@@ -173,9 +173,22 @@
                                             <tr>
                                                 <td class="small fw-bold text-muted"><%= article.id %></td>
                                                 <td class="text-truncate" style="max-width: 250px;"><%= article.title %></td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-info text-white">Editar</button>
-                                                    <button class="btn btn-sm btn-danger">Eliminar</button>
+                                                <td class="d-flex gap-2">
+                                                    <!----> Actualizar -->
+                                                     <form action ="/article/update/<%= article.id %>" method="POST">
+                                                        <input type="hidden" name="title" value="<%= article.title %>"
+                                                        <input type="hidden" name="autor" value="<%= article.autor %>"
+                                                        <input type="hidden" name="publishYear" value="<%= article.publishYear %>"
+                                                        <input type="hidden" name="resource" value="<%= article.resource %>"
+                                                        <input type="hidden" name="abstract" value="<%= article.abstract %>"
+                                                        <input type="hidden" name="keyword" value="<%= article.keyword %>"
+                                                        <button class="btn btn-sm btn-info text-white">Editar</button>
+                                                     </form>
+                                                    <!----> Eliminar -->
+                                                    <form action="/article/delete/<%= article.id %>" method="POST">
+                                                            onsubmit="return confirm('¿Seguro que desea eliminar este artículo?')">
+                                                        <button class="btn btn-sm btn-danger">Eliminar</button>
+                                                    </form>
                                                 </td>
                                             </tr>
                                         <% }); %>

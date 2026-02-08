@@ -2,7 +2,7 @@
 
 > [!IMPORTANT]
 > Este proyecto necesita las siguientes instalaciones
-> - [Node Js](https://nodejs.org/es/download)
+> - [Node Js](https://nodejs.org/es/download) versiones 22 o superior
 >
 
 ## Instalación

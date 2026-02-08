@@ -1,220 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Software de Gestión MVC - Taller</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<style>
-  :root {
-    --primary-dark: #420533;
-    --accent-color: #073d61;
-    --bg-light: #f8f9fa;
-  }
-
-  body {
-    background-color: var(--bg-light);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-
-
-  /*en esta parte se da el inicio al aplicattivo*/
-  .her-section {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, var(--primary-dark), #0f535e);
-    color: white;
-    transition: opacity 0.5s ease;
-  }
-
-  /*Utilidad para ocultar secciones*/
-  .hidden { display: none !important;}
-
-  /*Aqui se le da el estilo a las tarjetas de los articulos*/
-  .card-article {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    transition: transform 0.3s ease, border 0.3s ease;
-  }
-
-  .card-article:hover {
-    transform: translateY(-5px);
-    border: 1px solid var(--accent-blue);
-  }
-
-  .search-info-box {
-    background: #fff3cd;
-    border-left: 5px solid #14659b;
-    border-radius: 8px;
-  }
-
-  .btn-primary { background-color: var(--accent-blue); border: none; }
-  .btn-success { background-color: #276cac; border: none; }
-</style>
+    <style>
+        :root { --primary-dark: #420533; --accent-blue: #14659b; --bg-light: #f8f9fa; }
+        body { background-color: var(--bg-light); font-family: 'Segoe UI', sans-serif; }
+        .hero-section { height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary-dark), #0f535e); color: white; }
+        .hidden { display: none !important; }
+        .card-article { border: none; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s; }
+        .card-article:hover { transform: translateY(-5px); border: 1px solid var(--accent-blue); }
+        .search-info-box { background: #fff3cd; border-left: 5px solid var(--accent-blue); border-radius: 8px; }
+    </style>
 </head>
 <body> 
-  <div id="home-screen" class="hero-section text-center">
+    <div id="home-screen" class="hero-section text-center <%= editArticle ? 'hidden' : '' %>">
         <div>
-          <!--En esta parte se da el titulo al aplicativo-->
-          <h1 class="display-2 fw-bold mb-3">Investigación Base de Datos</h1>
-          <p class="lead mb-4">Gestión de articulos cientificos y busqueda</p>
-          <button class="btn btn-light btn-lg px-5 shadow-lg fw-bold" onclick="startApp()"><I>INICIO</I></button>
+            <h1 class="display-2 fw-bold mb-3">Investigación Base de Datos</h1>
+            <p class="lead mb-4">Gestión de artículos científicos y búsqueda</p>
+            <button class="btn btn-light btn-lg px-5 shadow-lg fw-bold" onclick="startApp()">INICIO</button>
         </div>
     </div>
 
-    <div id="main-app" class="container py-5 hidden">
-      <header class="mb-5">
-          <div class="d-flex justify-content-between align-items-center mb-4">
+    <div id="main-app" class="container py-5 <%= editArticle ? '' : 'hidden' %>">
+        <header class="mb-5 d-flex justify-content-between align-items-center">
             <h2 class="fw-bold">Repositorio de Artículos</h2>
-            <button class="btn btn-outline-secondary btn-sm" onclick="location.reload()">Volver al Inicio</button>
-          </div>
-
-          <div class="search-info-box p-4 shadow-sm mb-4">
-                <h6 class="text-uppercase fw-bold text-dark small mb-2">Cadena de Búsqueda Construida:</h6>
-                <code class="fs-5 text-primary-emphasis">
-                    ("new technologies" OR "emerging technologies") AND "Information Technology" AND "Education")
-                </code>
-                <p class="mt-2 mb-0 text-muted small"><strong>Base de Datos:</strong> Scopus / Science direct</p>
-          </div>
-      </header>
-
-      <section class="mb-5">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <label class="form-label fw-bold">Filtrar resultados:</label>
-                    <input type="text" id="articleSearch" class="form-control form-control-lg shadow-sm" placeholder="Escribe título, autor o palabra clave...">
-                </div>
-            </div>
-
-            <div class="row mt-5" id="articlesGrid">
+            <button class="btn btn-outline-secondary btn-sm" onclick="location.href='/'">Volver al Inicio</button>
+        </header>
+ 
+        <section class="mb-5">
+            <input type="text" id="articleSearch" class="form-control form-control-lg shadow-sm" placeholder="Buscar título, autor o palabra clave...">
+            <div class="row mt-4" id="articlesGrid">
                 <% if (articles && articles.length > 0) { %>
                     <% articles.forEach(function(article) { %>
-                      <div class="col-md-4 mb-4 article-card-container">
-                        <div class="card h-100 card-article p-3 shadow-sm">
-                          <div class="d-flex justify-content-between align-items-start mb-2">
-                                <span class="badge bg-secondary"><%= article.publishYear %></span>
-                                <span class="text-primary small fw-bold text-truncate" style="max-width: 150px;"><%= article.resource %></span>
-                          </div>
-                              <h5 class="card-title fw-bold"><%= article.title %></h5>
-                              <p class="text-muted small mb-3">Autores: <%= article.autor %></p>
-                                
-                            <button class="btn btn-outline-primary btn-sm mt-auto"
-                                  onclick="showArticleDetail('<%= article.title %>', '<%= article.autor %>', '<%= article.publishYear %>', '<%= article.resource %>', '<%= article.abstract %>', '<%= article.keyword %>')">
-                                <!--Ver Detalles Completos-->
-                            </button>
-                          </div>
+                        <div class="col-md-4 mb-4 article-card-container">
+                            <div class="card h-100 card-article p-3">
+                                <span class="badge bg-secondary mb-2" style="width: fit-content;"><%= article.publishYear %></span>
+                                <h5 class="fw-bold"><%= article.title %></h5>
+                                <p class="text-muted small">Autores: <%= article.autor %></p>
+                                <button class="btn btn-outline-primary btn-sm mt-auto" onclick="showArticleDetail('<%= article.title %>', '<%= article.autor %>', '<%= article.publishYear %>', '<%= article.resource %>', '<%= article.abstract %>', '<%= article.keyword %>')">Detalles</button>
+                            </div>
                         </div>
                     <% }); %>
-                <% } else { %>
-                    <div class="text-center py-5">
-                        <img src="https://cdn-icons-png.flaticon.com/512/7486/7486744.png" width="100" class="opacity-25 mb-3">
-                        <p class="text-muted fs-5">No hay artículos registrados aún. Usa el módulo de abajo para agregar uno.</p>
-                    </div>
                 <% } %>
             </div>
         </section>
 
-        <hr class="my-5 border-2 opacity-50">
+        <hr class="my-5">
 
         <section id="crud-section">
-            <h3 class="fw-bold mb-4">⚙️ Módulo de Gestión (CRUD)</h3>
             <div class="row g-4">
                 <div class="col-lg-4">
-                  <div class="card p-4 border-0 shadow-sm">
-                      <h5 class="fw-bold mb-3 text-success">Añadir Nuevo Artículo</h5>
-                      <form action="/newArticle" method="POST">
-                          <div class="mb-2">
-                            <input type="text" name="id" class="form-control" placeholder="ISBN / ID" required>
-                          </div>
-                            <div class="mb-2">
-                                <input type="text" name="title" class="form-control" placeholder="Título completo" required>
-                          </div>
-                        <div class="mb-2">
-                            <input type="text" name="autor" class="form-control" placeholder="Autores (Ej: Pérez, J.)" required>
-                        </div>
-                          <div class="row g-2 mb-2">
-                        <div class="col-5">
-                          <input type="number" name="publishYear" class="form-control" placeholder="Año" required>
-                        </div>
-                          <div class="col-7">
-                              <input type="text" name="resource" class="form-control" placeholder="Revista / Fuente" required>
-                          </div>
+                    <div class="card p-4 border-0 shadow-sm">
+                        <h5 class="fw-bold mb-3 <%= editArticle ? 'text-warning' : 'text-success' %>">
+                            <%= editArticle ? 'Modificar Artículo' : 'Nuevo Artículo' %>
+                        </h5>
+                        <form action="<%= editArticle ? '/updateArticle' : '/newArticle' %>" method="POST">
+                            <input type="text" name="id" class="form-control mb-2" placeholder="ID" value="<%= editArticle ? editArticle.id : '' %>" <%= editArticle ? 'readonly' : '' %> required>
+                            <input type="text" name="title" class="form-control mb-2" placeholder="Título" value="<%= editArticle ? editArticle.title : '' %>" required>
+                            <input type="text" name="autor" class="form-control mb-2" placeholder="Autor" value="<%= editArticle ? editArticle.autor : '' %>" required>
+                            <div class="row g-2 mb-2">
+                                <div class="col-5"><input type="number" name="publishYear" class="form-control" placeholder="Año" value="<%= editArticle ? editArticle.publishYear : '' %>" required></div>
+                                <div class="col-7"><input type="text" name="resource" class="form-control" placeholder="Fuente" value="<%= editArticle ? editArticle.resource : '' %>" required></div>
                             </div>
-                        <div class="mb-2">
-                            <textarea name="abstract" class="form-control" rows="3" placeholder="Resumen o Abstract" required></textarea>
-                        </div>
-
-                        <div class="mb-3">
-                            <input type="text" name="keyword" class="form-control" placeholder="Palabras clave" required>
-                        </div>
-                          <button type="submit" class="btn btn-success w-100 fw-bold py-2 shadow-sm">Guardar Artículo</button>
+                            <textarea name="abstract" class="form-control mb-2" rows="3" placeholder="Resumen" required><%= editArticle ? editArticle.abstract : '' %></textarea>
+                            <input type="text" name="keyword" class="form-control mb-3" placeholder="Keywords" value="<%= editArticle ? editArticle.keyword : '' %>" required>
+                            
+                            <button type="submit" class="btn <%= editArticle ? 'btn-warning' : 'btn-success' %> w-100 fw-bold">
+                                <%= editArticle ? 'Actualizar' : 'Guardar' %>
+                            </button>
+                            <% if (editArticle) { %><a href="/" class="btn btn-link w-100 mt-1 text-muted small">Cancelar</a><% } %>
                         </form>
                     </div>
                 </div>
 
                 <div class="col-lg-8">
                     <div class="card p-4 border-0 shadow-sm">
-                        <h5 class="fw-bold mb-3">Listado para Modificación / Eliminación</h5>
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
-                                <thead class="table-light">
+                        <h5 class="fw-bold mb-3">Gestión de Datos</h5>
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light"><tr><th>ID</th><th>Título</th><th>Acciones</th></tr></thead>
+                            <tbody>
+                                <% articles.forEach(function(article) { %>
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Título</th>
-                                        <th>Acciones</th>
+                                        <td class="small fw-bold"><%= article.id %></td>
+                                        <td class="text-truncate" style="max-width: 250px;"><%= article.title %></td>
+                                        <td>
+                                            <a href="/edit/<%= article.id %>" class="btn btn-sm btn-info text-white">Editar</a>
+                                            <a href="/delete/<%= article.id %>" class="btn btn-sm btn-danger" onclick="return confirm('¿Borrar?')">Borrar</a>
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    <% if (articles && articles.length > 0) { %>
-                                        <% articles.forEach(function(article) { %>
-                                            <tr>
-                                                <td class="small fw-bold text-muted"><%= article.id %></td>
-                                                <td class="text-truncate" style="max-width: 250px;"><%= article.title %></td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-info text-white">Editar</button>
-                                                    <button class="btn btn-sm btn-danger">Eliminar</button>
-                                                </td>
-                                            </tr>
-                                        <% }); %>
-                                    <% } %>
-                                </tbody>
-                            </table>
-                        </div>
+                                <% }); %>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </section>
-  </div>
-  <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+    </div>
+
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title fw-bold" id="m-title"></h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
+            <div class="modal-content border-0">
+                <div class="modal-header bg-primary text-white"><h5 class="modal-title" id="m-title"></h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body p-4">
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <p class="mb-1 text-muted small fw-bold text-uppercase">Autores</p>
-                            <p id="m-authors" class="fw-semibold"></p>
-                        </div>
-                        <div class="col-md-3">
-                            <p class="mb-1 text-muted small fw-bold text-uppercase">Año</p>
-                            <p id="m-year"></p>
-                        </div>
-                        <div class="col-md-3">
-                            <p class="mb-1 text-muted small fw-bold text-uppercase">Fuente</p>
-                            <p id="m-source"></p>
-                        </div>
-                    </div>
-                    <hr>
-                    <h6 class="fw-bold mb-2">Resumen:</h6>
-                    <p id="m-abstract" class="text-secondary" style="text-align: justify; line-height: 1.6;"></p>
-                    <hr>
-                    <p class="mb-0"><strong>Palabras Clave:</strong> <span id="m-keywords" class="badge bg-light text-primary"></span></p>
+                    <p><strong>Autores:</strong> <span id="m-authors"></span> | <strong>Año:</strong> <span id="m-year"></span></p>
+                    <p><strong>Resumen:</strong></p><p id="m-abstract" class="text-muted"></p>
                 </div>
             </div>
         </div>
@@ -222,34 +114,19 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Navegación entre pantallas
-        function startApp() {
-            document.getElementById('home-screen').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
-        }
-
-        // Buscador en tiempo real
+        function startApp() { document.getElementById('home-screen').classList.add('hidden'); document.getElementById('main-app').classList.remove('hidden'); }
         document.getElementById('articleSearch').addEventListener('keyup', function() {
             let filter = this.value.toLowerCase();
-            let items = document.querySelectorAll('.article-card-container');
-            
-            items.forEach(item => {
-                let text = item.innerText.toLowerCase();
-                item.style.display = text.includes(filter) ? '' : 'none';
+            document.querySelectorAll('.article-card-container').forEach(item => {
+                item.style.display = item.innerText.toLowerCase().includes(filter) ? '' : 'none';
             });
         });
-
-        // Llenar y mostrar el Modal de detalles
         function showArticleDetail(title, author, year, source, abstract, keywords) {
             document.getElementById('m-title').innerText = title;
             document.getElementById('m-authors').innerText = author;
             document.getElementById('m-year').innerText = year;
-            document.getElementById('m-source').innerText = source;
             document.getElementById('m-abstract').innerText = abstract;
-            document.getElementById('m-keywords').innerText = keywords;
-
-            const modal = new bootstrap.Modal(document.getElementById('detailModal'));
-            modal.show();
+            new bootstrap.Modal(document.getElementById('detailModal')).show();
         }
     </script>
 </body>
